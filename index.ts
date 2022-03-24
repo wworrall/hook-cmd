@@ -11,6 +11,7 @@ type Config = {
 type HookCmd = {
   hook: string;
   cmd: string;
+  args?: string[];
 };
 
 const getCmdAndOptions = (hook?: string) =>
@@ -36,11 +37,15 @@ const app = http.createServer(async (req, res) => {
 
   if (!hookCmd) return;
 
-  const cmd = hookCmd.cmd.split(/\s+/)[0];
-  const args = hookCmd.cmd.split(/\s+/).slice(1);
-  spawn(cmd, args, {
-    stdio: ["pipe", process.stdout, process.stderr],
-  });
+  if (hookCmd.args?.length) {
+    spawn(hookCmd.cmd, hookCmd.args, {
+      stdio: ["pipe", process.stdout, process.stderr],
+    });
+  } else {
+    spawn(hookCmd.cmd, {
+      stdio: ["pipe", process.stdout, process.stderr],
+    });
+  }
 });
 
 // 0 is node, 1 is current script, 2 is config file passed in as stdin first

@@ -17,7 +17,7 @@ const node_http_1 = __importDefault(require("node:http"));
 const node_child_process_1 = require("node:child_process");
 const getCmdAndOptions = (hook) => hookCmds.find((hookCmd) => hookCmd.hook === hook);
 const app = node_http_1.default.createServer((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     const hook = (_a = req.url) === null || _a === void 0 ? void 0 : _a.slice(1);
     const hookCmd = getCmdAndOptions(hook);
     let statusCode;
@@ -35,11 +35,16 @@ const app = node_http_1.default.createServer((req, res) => __awaiter(void 0, voi
     res.end();
     if (!hookCmd)
         return;
-    const cmd = hookCmd.cmd.split(/\s+/)[0];
-    const args = hookCmd.cmd.split(/\s+/).slice(1);
-    node_child_process_1.spawn(cmd, args, {
-        stdio: ["pipe", process.stdout, process.stderr],
-    });
+    if ((_b = hookCmd.args) === null || _b === void 0 ? void 0 : _b.length) {
+        (0, node_child_process_1.spawn)(hookCmd.cmd, hookCmd.args, {
+            stdio: ["pipe", process.stdout, process.stderr],
+        });
+    }
+    else {
+        (0, node_child_process_1.spawn)(hookCmd.cmd, {
+            stdio: ["pipe", process.stdout, process.stderr],
+        });
+    }
 }));
 // 0 is node, 1 is current script, 2 is config file passed in as stdin first
 // argument
