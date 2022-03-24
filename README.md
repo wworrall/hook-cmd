@@ -41,11 +41,9 @@ Pipe this configuration object in to `hook-cmd` as the first argument
 hook-cmd "$(<hookCmdConfig.json)"
 ```
 
-To run as a service, see [this StackOverflow answer](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service/29042953#29042953).
+To run as a service (recommended), see [this StackOverflow answer](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service/29042953#29042953).
 
-Std log and std err of the commands are piped to std log/err of the parent `hook-cmd` process.
-
-A log object for the most recent execution is stored in `hookCmd.log`.
+`std log` and `std err` of the commands are piped to `std log`/`std err` of the parent `hook-cmd` process.
 
 ## Contributing
 
