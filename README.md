@@ -82,3 +82,11 @@ sudo service hook-cmd start
 ```console
 journalctl -u hook-cmd -b -f
 ```
+
+## Contributing
+
+If you have any suggestions please open up an issue.
+
+## License
+
+[MIT License](http://opensource.org/licenses/MIT)
