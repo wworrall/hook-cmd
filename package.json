@@ -1,6 +1,6 @@
 {
   "name": "@wworrall/hook-cmd",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "Run commands on receipt of webhooks",
   "scripts": {
     "build": "npx tsc && mv ./bin/index.js ./bin/hook-cmd && chmod +x ./bin/hook-cmd",

@@ -4,7 +4,7 @@ A simple webhook handler written in Typescript that executes a command on receip
 
 Transpiled to a single javascript executable with zero dependencies.
 
-_Requires Node 16_ for safe exiting when exception thrown (no use of `make-promises-safe`)
+_Requires Node 16_ for safe exiting when exception thrown (no use of `make-promises-safe`).
 
 ## Usage
 
@@ -35,7 +35,7 @@ Create a configuration object as a json string. E.g. `hookCmdConfig.json`:
 }
 ```
 
-Pipe this configuration object in to `hook-cmd` as the first argument
+Pipe this configuration object in to `hook-cmd` as the first argument.
 
 ```console
 hook-cmd "$(<hookCmdConfig.json)"
@@ -43,7 +43,7 @@ hook-cmd "$(<hookCmdConfig.json)"
 
 To run as a service (recommended), see [this StackOverflow answer](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service/29042953#29042953).
 
-`std log` and `std err` of the commands are piped to `std log`/`std err` of the parent `hook-cmd` process.
+`std log` and `std err` of the commands are piped to `std log` and `std err` of the parent `hook-cmd` process.
 
 ## Contributing
 
