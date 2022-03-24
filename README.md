@@ -42,10 +42,43 @@ Pass configuration filename in to `hook-cmd` as the first argument.
 hook-cmd hookCmdConfig.json
 ```
 
-To run as a service (recommended), see [this StackOverflow answer](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service/29042953#29042953).
-
 `std log` and `std err` of the commands are piped to `std log` and `std err` of the parent `hook-cmd` process.
 
-## Contributing
+## Run as service (recommended)
 
-Please raise an issue and we'll go from there :)
+Note the following may only be accurate for Ubuntu
+
+1. Place the following in to a file named `/etc/systemd/system/hook-cmd.service`.
+
+```
+[Unit]
+Description=Hook CMD
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=ubuntu
+ExecStart=hook-cmd /path/to/hookCmdConfig.json
+StandardOutput=syslog+console
+StandardError=syslog+console
+
+[Install]
+WantedBy=multi-user.target
+```
+
+2. Remember to change `User=ubuntu` if required and change `/path/to/hookCmdConfig.json`.
+
+3. Run:
+
+```console
+sudo service hook-cmd start
+```
+
+4. Tip: you can tail the logs of the service by running:
+
+```console
+journalctl -u hook-cmd -b -f
+```
