@@ -9,7 +9,7 @@ _Requires Node 16_
 ## Usage
 
 ```console
-curl https://raw.githubusercontent.com/wworrall/hook-cmd/master/bin/hook-cmd > /usr/local/bin/hook-cmd; chmod +x /usr/local/bin/hood-cmd
+curl https://raw.githubusercontent.com/wworrall/hook-cmd/master/bin/hook-cmd > /usr/local/bin/hook-cmd; chmod +x /usr/local/bin/hook-cmd
 ```
 
 Create a configuration file e.g. `hookCmdConfig.json`:
