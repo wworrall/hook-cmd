@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-import http from "node:http";
 import { spawn } from "node:child_process";
+import fs from "node:fs";
+import http from "node:http";
 
 type Config = {
   port?: number;
@@ -48,9 +49,10 @@ const app = http.createServer(async (req, res) => {
   }
 });
 
-// 0 is node, 1 is current script, 2 is config file passed in as stdin first
+// 0 is node, 1 is current script, 2 is config filename passed in as stdin first
 // argument
-const configStr = process.argv[2];
+const configFilename = process.argv[2];
+const configStr = fs.readFileSync(configFilename, "utf8");
 const config: Config = JSON.parse(configStr);
 
 const port = config.port || 5000;

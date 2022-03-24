@@ -20,9 +20,10 @@ Make executable
 chmod +x /usr/local/bin/hook-cmd;
 ```
 
-Create a configuration object as a json string. E.g. `hookCmdConfig.json`:
+Create configuration as a JSON file:
 
 ```jsonc
+// hookCmdConfig.json
 {
   "hookCmds": [
     {
@@ -35,10 +36,10 @@ Create a configuration object as a json string. E.g. `hookCmdConfig.json`:
 }
 ```
 
-Pipe this configuration object in to `hook-cmd` as the first argument.
+Pass configuration filename in to `hook-cmd` as the first argument.
 
 ```console
-hook-cmd "$(<hookCmdConfig.json)"
+hook-cmd hookCmdConfig.json
 ```
 
 To run as a service (recommended), see [this StackOverflow answer](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service/29042953#29042953).

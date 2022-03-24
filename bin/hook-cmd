@@ -13,8 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const node_http_1 = __importDefault(require("node:http"));
 const node_child_process_1 = require("node:child_process");
+const node_fs_1 = __importDefault(require("node:fs"));
+const node_http_1 = __importDefault(require("node:http"));
 const getCmdAndOptions = (hook) => hookCmds.find((hookCmd) => hookCmd.hook === hook);
 const app = node_http_1.default.createServer((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
@@ -46,9 +47,10 @@ const app = node_http_1.default.createServer((req, res) => __awaiter(void 0, voi
         });
     }
 }));
-// 0 is node, 1 is current script, 2 is config file passed in as stdin first
+// 0 is node, 1 is current script, 2 is config filename passed in as stdin first
 // argument
-const configStr = process.argv[2];
+const configFilename = process.argv[2];
+const configStr = node_fs_1.default.readFileSync(configFilename, "utf8");
 const config = JSON.parse(configStr);
 const port = config.port || 5000;
 const { hookCmds } = config;
