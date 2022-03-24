@@ -1,20 +1,13 @@
 {
   "name": "@wworrall/hook-cmd",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Run commands on receipt of webhooks",
-  "main": "dist/index.js",
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx tsc && mv ./bin/index.js ./bin/hook-cmd",
     "dev": "nodemon --exec \"npx ts-node index.ts\"",
     "start": "node dist"
   },
-  "repository": "git://github.com/wworrall/api.git",
-  "keywords": [
-    "API",
-    "framework",
-    "MongoDB",
-    "extensible"
-  ],
+  "repository": "git://github.com/wworrall/hook-cmd.git",
   "author": "Will Worrall (github.com/wworrall)",
   "license": "ISC",
   "devDependencies": {
@@ -23,17 +16,11 @@
     "ts-node": "^10.0.0",
     "typescript": "^4.3.5"
   },
-  "dependencies": {
-    "make-promises-safe": "^5.1.0"
-  },
   "nodemonConfig": {
     "delay": 1000,
     "ext": "ts,json",
     "ignore": [
       "dist/*"
     ]
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }

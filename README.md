@@ -2,11 +2,35 @@
 
 A simple webhook handler written in Typescript that executes a command on receipt of a webhook. Inspired by [Docker Hook](https://github.com/schickling/docker-hook).
 
+Transpiled to a single javascript executable with zero dependencies.
+
+_Requires Node 16_
+
 ## Usage
 
-Clone this repository, run `npm run build && npm start`.
+```console
+curl https://raw.githubusercontent.com/wworrall/hook-cmd/master/bin/hook-cmd > /usr/local/bin/hook-cmd; chmod +x /usr/local/bin/hood-cmd
+```
 
-You need to add configuration to `hookCmdConfig.json`. See that file for more information.
+Create a configuration file e.g. `hookCmdConfig.json`:
+
+```json
+{
+  "hookCmds": [
+    {
+      "hook": "a secret key to identify this hook. Hook will be listened for at http://localhost:<port>/<hook>",
+      "cmd": "the command to execute"
+    }
+  ],
+  "port": 5000
+}
+```
+
+And pipe this configuration file in to hook-cmd as the first command
+
+```
+hook-cmd
+```
 
 It is recommended to run this as a service. See [this StackOverflow answer](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service/29042953#29042953) and remember to change `nogroup` to a user on the system.
 

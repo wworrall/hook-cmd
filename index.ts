@@ -1,74 +1,55 @@
-import "make-promises-safe";
-import http from "http";
-import { exec } from "child_process";
-import fs from "fs";
-import path from "path";
-import hookCmdConfig from "./hookCmdConfig.json";
+#!/usr/bin/env node
+
+import http from "node:http";
+import { spawn } from "node:child_process";
+
+type Config = {
+  port?: number;
+  hookCmds: HookCmd[];
+};
 
 type HookCmd = {
   hook: string;
   cmd: string;
-  childProcessOptions?: any;
 };
 
-type CmdLog = {
-  stderr?: string;
-  stdout?: string;
-  execException?: object;
-  error?: string;
-};
+const getCmdAndOptions = (hook?: string) =>
+  hookCmds.find((hookCmd) => hookCmd.hook === hook);
 
-const getCmdAndOptions = (hook?: string) => {
-  const hookCmd = hookCmdConfig.hookCmds.find(
-    (hookCmd: HookCmd) => hookCmd.hook === hook
-  ) as HookCmd;
-  return {
-    cmd: hookCmd?.cmd,
-    childProcessOptions: hookCmd?.childProcessOptions,
-  };
-};
 const app = http.createServer(async (req, res) => {
-  const cmdLog: CmdLog = {};
-  try {
-    const hook = req.url?.slice(1);
-    const { cmd, childProcessOptions } = getCmdAndOptions(hook);
+  const hook = req.url?.slice(1);
+  const hookCmd = getCmdAndOptions(hook);
 
-    let statusCode = 202;
-    let data: object = { message: "Hook received. Executing command." };
-
-    if (!cmd) {
-      statusCode = 400;
-      data = { message: "Bad request." };
-    }
-
-    res.writeHead(statusCode, { "Content-Type": "application/json" });
-    res.write(JSON.stringify(data));
-    res.end();
-
-    if (statusCode !== 202) return;
-
-    const process = exec(
-      cmd,
-      childProcessOptions,
-      (execException, stdout, stderr) => {
-        cmdLog.execException = execException || undefined;
-        cmdLog.stderr = stderr.toString();
-        cmdLog.stdout = stdout.toString();
-      }
-    );
-
-    await new Promise((resolve) => process.on("close", resolve));
-  } catch (e) {
-    cmdLog.error = e.stack || e.message;
-  } finally {
-    fs.writeFileSync(
-      path.join(process.cwd(), "hookCmd.log"),
-      JSON.stringify(cmdLog, undefined, 2)
-    );
+  let statusCode: number;
+  let data: object;
+  if (!hookCmd) {
+    statusCode = 400;
+    data = { message: "Bad request." };
+  } else {
+    statusCode = 202;
+    data = { message: "Hook received. Executing command." };
   }
+
+  res.writeHead(statusCode, { "Content-Type": "application/json" });
+  res.write(JSON.stringify(data));
+  res.end();
+
+  if (!hookCmd) return;
+
+  const cmd = hookCmd.cmd.split(/\s+/)[0];
+  const args = hookCmd.cmd.split(/\s+/).slice(1);
+  spawn(cmd, args, {
+    stdio: ["pipe", process.stdout, process.stderr],
+  });
 });
 
-const port = hookCmdConfig.port || 5000;
+// 0 is node, 1 is current script, 2 is config file passed in as stdin first
+// argument
+const configStr = process.argv[2];
+const config: Config = JSON.parse(configStr);
+
+const port = config.port || 5000;
+const { hookCmds } = config;
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
