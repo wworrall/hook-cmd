@@ -22,7 +22,7 @@ chmod +x /usr/local/bin/hook-cmd;
 
 Create a configuration object as a json string. E.g. `hookCmdConfig.json`:
 
-```json
+```jsonc
 {
   "hookCmds": [
     {
