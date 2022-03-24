@@ -4,7 +4,7 @@ A simple webhook handler written in Typescript that executes a command on receip
 
 Transpiled to a single javascript executable with zero dependencies.
 
-_Requires Node 16_
+_Requires Node 16_ for safe exiting when exception thrown (no use of `make-promises-safe`)
 
 ## Usage
 
