@@ -24,8 +24,8 @@ const app = http.createServer(async (req, res) => {
   let statusCode: number;
   let data: object;
   if (!hookCmd) {
-    statusCode = 400;
-    data = { message: "Bad request." };
+    statusCode = 404;
+    data = { message: "Not found." };
   } else {
     statusCode = 202;
     data = { message: "Hook received. Executing command." };

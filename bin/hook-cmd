@@ -23,8 +23,8 @@ const app = node_http_1.default.createServer((req, res) => __awaiter(void 0, voi
     let statusCode;
     let data;
     if (!hookCmd) {
-        statusCode = 400;
-        data = { message: "Bad request." };
+        statusCode = 404;
+        data = { message: "Not found." };
     }
     else {
         statusCode = 202;

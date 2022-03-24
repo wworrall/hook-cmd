@@ -26,7 +26,7 @@ Create a configuration object as a json string. E.g. `hookCmdConfig.json`:
 {
   "hookCmds": [
     {
-      "hook": "top-secret-key", // Hook will be listened for at http://localhost:<port>/<hook>",
+      "hook": "top-secret-key", // Hook will be listened for at http://localhost:<port>/<hook>"
       "cmd": "echo", // hello world
       "args": ["hello world"] // [optional] array of arguments
     }
