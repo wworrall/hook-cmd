@@ -46,7 +46,7 @@ hook-cmd hookCmdConfig.json
 
 ## Run as service (recommended)
 
-Note the following may only be accurate for Ubuntu
+May only be accurate for Ubuntu
 
 1. Place the following in to a file named `/etc/systemd/system/hook-cmd.service`.
 
@@ -77,7 +77,13 @@ WantedBy=multi-user.target
 sudo service hook-cmd start
 ```
 
-4. Tip: you can tail the logs of the service by running:
+4. To enable automatic start on system boot:
+
+```console
+sudo sudo systemctl enable hook-cmd
+```
+
+5. Tip: you can tail the logs of the service by running:
 
 ```console
 journalctl -u hook-cmd -b -f
