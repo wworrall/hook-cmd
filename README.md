@@ -62,8 +62,8 @@ Restart=always
 RestartSec=1
 User=ubuntu
 ExecStart=hook-cmd /path/to/hookCmdConfig.json
-StandardOutput=syslog+console
-StandardError=syslog+console
+StandardOutput=journal+console
+StandardError=journal+console
 
 [Install]
 WantedBy=multi-user.target
