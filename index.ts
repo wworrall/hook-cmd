@@ -32,26 +32,39 @@ const app = http.createServer(async (req, res) => {
     data = { message: "Hook received. Executing command." };
   }
 
+  // read the request body
+  let body = "";
+  for await (const chunk of req) {
+    body += chunk;
+  }
+
   res.writeHead(statusCode, { "Content-Type": "application/json" });
   res.write(JSON.stringify(data));
   res.end();
 
   if (!hookCmd) return;
 
+  let args: string[];
   if (hookCmd.args?.length) {
-    spawn(hookCmd.cmd, hookCmd.args, {
-      stdio: ["pipe", process.stdout, process.stderr],
-    });
+    args = [...hookCmd.args, body];
   } else {
-    spawn(hookCmd.cmd, {
-      stdio: ["pipe", process.stdout, process.stderr],
-    });
+    args = [body];
   }
+
+  spawn(hookCmd.cmd, args, {
+    stdio: ["pipe", process.stdout, process.stderr],
+  });
 });
 
 // 0 is node, 1 is current script, 2 is config filename passed in as stdin first
 // argument
 const configFilename = process.argv[2];
+
+if (!configFilename) {
+  console.error("No config file specified. Exiting.");
+  process.exit(1);
+}
+
 const configStr = fs.readFileSync(configFilename, "utf8");
 const config: Config = JSON.parse(configStr);
 

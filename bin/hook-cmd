@@ -9,6 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -17,9 +24,10 @@ const node_child_process_1 = require("node:child_process");
 const node_fs_1 = __importDefault(require("node:fs"));
 const node_http_1 = __importDefault(require("node:http"));
 const getCmdAndOptions = (hook) => hookCmds.find((hookCmd) => hookCmd.hook === hook);
-const app = node_http_1.default.createServer((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
-    const hook = (_a = req.url) === null || _a === void 0 ? void 0 : _a.slice(1);
+const app = node_http_1.default.createServer((req, res) => { var req_1, req_1_1; return __awaiter(void 0, void 0, void 0, function* () {
+    var e_1, _a;
+    var _b, _c;
+    const hook = (_b = req.url) === null || _b === void 0 ? void 0 : _b.slice(1);
     const hookCmd = getCmdAndOptions(hook);
     let statusCode;
     let data;
@@ -31,25 +39,44 @@ const app = node_http_1.default.createServer((req, res) => __awaiter(void 0, voi
         statusCode = 202;
         data = { message: "Hook received. Executing command." };
     }
+    // read the request body
+    let body = "";
+    try {
+        for (req_1 = __asyncValues(req); req_1_1 = yield req_1.next(), !req_1_1.done;) {
+            const chunk = req_1_1.value;
+            body += chunk;
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (req_1_1 && !req_1_1.done && (_a = req_1.return)) yield _a.call(req_1);
+        }
+        finally { if (e_1) throw e_1.error; }
+    }
     res.writeHead(statusCode, { "Content-Type": "application/json" });
     res.write(JSON.stringify(data));
     res.end();
     if (!hookCmd)
         return;
-    if ((_b = hookCmd.args) === null || _b === void 0 ? void 0 : _b.length) {
-        (0, node_child_process_1.spawn)(hookCmd.cmd, hookCmd.args, {
-            stdio: ["pipe", process.stdout, process.stderr],
-        });
+    let args;
+    if ((_c = hookCmd.args) === null || _c === void 0 ? void 0 : _c.length) {
+        args = [...hookCmd.args, body];
     }
     else {
-        (0, node_child_process_1.spawn)(hookCmd.cmd, {
-            stdio: ["pipe", process.stdout, process.stderr],
-        });
+        args = [body];
     }
-}));
+    (0, node_child_process_1.spawn)(hookCmd.cmd, args, {
+        stdio: ["pipe", process.stdout, process.stderr],
+    });
+}); });
 // 0 is node, 1 is current script, 2 is config filename passed in as stdin first
 // argument
 const configFilename = process.argv[2];
+if (!configFilename) {
+    console.error("No config file specified. Exiting.");
+    process.exit(1);
+}
 const configStr = node_fs_1.default.readFileSync(configFilename, "utf8");
 const config = JSON.parse(configStr);
 const port = config.port || 5000;
