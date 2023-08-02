@@ -74,13 +74,13 @@ WantedBy=multi-user.target
 3. Run:
 
 ```console
-sudo service hook-cmd start
+service hook-cmd start
 ```
 
 4. To enable automatic start on system boot:
 
 ```console
-sudo sudo systemctl enable hook-cmd
+systemctl enable hook-cmd
 ```
 
 5. Tip: you can tail the logs of the service by running:
