@@ -26,7 +26,7 @@ const node_http_1 = __importDefault(require("node:http"));
 const getCmdAndOptions = (hook) => hookCmds.find((hookCmd) => hookCmd.hook === hook);
 const app = node_http_1.default.createServer((req, res) => { var req_1, req_1_1; return __awaiter(void 0, void 0, void 0, function* () {
     var e_1, _a;
-    var _b, _c;
+    var _b;
     const hook = (_b = req.url) === null || _b === void 0 ? void 0 : _b.slice(1);
     const hookCmd = getCmdAndOptions(hook);
     let statusCode;
@@ -59,14 +59,10 @@ const app = node_http_1.default.createServer((req, res) => { var req_1, req_1_1;
     res.end();
     if (!hookCmd)
         return;
-    let args;
-    if ((_c = hookCmd.args) === null || _c === void 0 ? void 0 : _c.length) {
-        args = [...hookCmd.args, body];
-    }
-    else {
-        args = [body];
-    }
-    (0, node_child_process_1.spawn)(hookCmd.cmd, args, {
+    // we construct these arguments to pass to the env command so that the
+    // command in hookCmd gets the environment variables
+    let args = [hookCmd.cmd, ...((hookCmd === null || hookCmd === void 0 ? void 0 : hookCmd.args) || []), body];
+    (0, node_child_process_1.spawn)("env", args, {
         stdio: ["pipe", process.stdout, process.stderr],
     });
 }); });

@@ -44,14 +44,11 @@ const app = http.createServer(async (req, res) => {
 
   if (!hookCmd) return;
 
-  let args: string[];
-  if (hookCmd.args?.length) {
-    args = [...hookCmd.args, body];
-  } else {
-    args = [body];
-  }
+  // we construct these arguments to pass to the env command so that the
+  // command in hookCmd gets the environment variables
+  let args: string[] = [hookCmd.cmd, ...(hookCmd?.args || []), body];
 
-  spawn(hookCmd.cmd, args, {
+  spawn("env", args, {
     stdio: ["pipe", process.stdout, process.stderr],
   });
 });
